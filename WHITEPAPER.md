@@ -22,25 +22,25 @@ People are ready for a new, trustless, immutable means of expressing our relatio
 
 ## Overview – tell what you will discuss in the paper and define key terms you will use
 
-Blockchain
-	Durability
-	Immutability
-	trustless
-Smart contract
-	NFT
-	uniqueness/scarcity
-	Editable metadata
-Censorship
-	Controlled by participants / exclusive control
-	Decentralized politically, geographically, culturally
-	Genuine relationships, universal record, anti-forgery
+* Blockchain
+    * Durability
+    * Immutability
+    * Trustless
+* Smart contract
+	* NFT
+	* Autonomous, robust
+	* Editable metadata
+* Censorship
+	* Controlled by participants / exclusive control
+	* Decentralized politically, geographically, culturally
+	* Genuine relationships, universal record, anti-forgery
 
 ## Body – discuss the industry issue, technology, or product feature, including your solution or resolution to the challenge and related benefits; include quantifiable results that are expected, if applicable
 
 
 ## Call-to-action – what you want your reader to do next; examples include watching a video, visiting specific areas of your website, or requesting a product demo
 
-Take control of your relationships, your finances, and your world. 
-Prove your love, make unbreakable bonds
+* Take control of your relationships, your finances, and your world. 
+* Prove your love, make unbreakable bonds
 
 
