@@ -1,11 +1,13 @@
-import { Container, Typography, makeStyles, Grid } from '@material-ui/core';
+import {
+  Container,
+  Typography,
+  makeStyles,
+  Grid,
+  Button
+} from "@material-ui/core";
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
-  title: {
-    // fontFamily: "'Mali', cursive",
-    fontSize: 72,
-    letterSpacing: '-0.25rem'
-  },
   container: {
     marginTop: theme.spacing(4),
     marginBottom: theme.spacing(4),
@@ -30,6 +32,22 @@ export default function Hero() {
           <Typography variant="body1" paragraph>
             Commitmint creates NFTs (Non-fungible tokens) built for two to establish permanent tokens of commitment, friendship and love. It takes two to "mint" (create) a toke and two to "burn" (reject) a token.
           </Typography>
+          <Button
+            variant="contained"
+            color="primary"
+            component={Link}
+            to="/friendship"
+          >
+            Token of Friendship
+          </Button>
+          <Button
+            variant="contained"
+            color="secondary"
+            component={Link}
+            to="/love"
+          >
+            Token of Love
+          </Button>
         </Grid>
       </Grid>
     </Container>

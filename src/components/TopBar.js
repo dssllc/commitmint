@@ -4,16 +4,17 @@ import {
   Typography,
   makeStyles,
   Button,
-} from '@material-ui/core';
-import TollIcon from '@material-ui/icons/Toll';
-import InfoIcon from '@material-ui/icons/Info';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import PeopleIcon from '@material-ui/icons/People';
+} from "@material-ui/core";
+import { Link } from 'react-router-dom';
+import TollIcon from "@material-ui/icons/Toll";
+import InfoIcon from "@material-ui/icons/Info";
+import FavoriteIcon from "@material-ui/icons/Favorite";
+import PeopleIcon from "@material-ui/icons/People";
 
 const useStyles = makeStyles((theme) => ({
   customAppBar: {
-    background: 'transparent',
-    boxShadow: 'none'
+    background: "transparent",
+    boxShadow: "none"
   },
   root: {
     flexGrow: 1,
@@ -23,6 +24,7 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     flexGrow: 1,
+    textDecoration: "none"
   },
   button: {
     [theme.breakpoints.down("sm")]: {
@@ -49,27 +51,40 @@ export default function TopBar() {
       <AppBar position="static" color="transparent" className={classes.appBar} elevation={0}>
         <Toolbar>
           <TollIcon className={classes.icon} />
-          <Typography variant="h6" color="inherit" noWrap className={classes.title}>
+          <Typography
+            variant="h6"
+            color="inherit"
+            noWrap
+            className={classes.title}
+            component={Link}
+            to="/"
+          >
             commitmint
           </Typography>
-          <Button 
-            color="inherit" 
+          <Button
+            color="inherit"
             startIcon={<InfoIcon />}
             className={classes.button}
+            component={Link}
+            to="/about"
           >
             <span className={classes.buttonText}>About</span>
           </Button>
-          <Button 
-            color="inherit" 
+          <Button
+            color="inherit"
             startIcon={<FavoriteIcon />}
             className={classes.button}
+            component={Link}
+            to="/love"
           >
             <span className={classes.buttonText}>Token of Love</span>
           </Button>
-          <Button 
-            color="inherit" 
+          <Button
+            color="inherit"
             startIcon={<PeopleIcon />}
             className={classes.button}
+            component={Link}
+            to="/friendship"
           >
             <span className={classes.buttonText}>Token of Friendship</span>
           </Button>
@@ -79,5 +94,5 @@ export default function TopBar() {
   );
 
 
-  
+
 }
