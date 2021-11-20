@@ -51,7 +51,7 @@ describe("TokenOfFriendship", function () {
     await TokenOfFriendship.mint(overrides);
     // Verify token is minted to the owner.
     expect(await TokenOfFriendship.ownerOf(1)).to.equal(owner.address);
-    // Expect the owner balance to be less the burn amount 
+    // Expect the owner balance to be less the burn amount
     // and within .002ETH for gas
     expect(
       await ethers.provider.getBalance(owner.address)
@@ -61,5 +61,25 @@ describe("TokenOfFriendship", function () {
     );
     // Expect burn address to have the burned ether.
     expect((await ethers.provider.getBalance(BURN_ADDRESS))).to.equal(overrides.value);
+  });
+
+  it("should not allow transfer approvals", async function () {
+    let msg = "NoApprovals";
+    // Attempt approve.
+    await expect(
+      TokenOfFriendship.approve(secondAddress.address, 1)
+    ).to.be.revertedWith(msg);
+    // Attempt setApprovalForAll.
+    await expect(
+      TokenOfFriendship.setApprovalForAll(secondAddress.address, true)
+    ).to.be.revertedWith(msg);
+  });
+
+  it("should not allow transfers", async function () {
+    let msg = "NoTransfers";
+    // Attempt transferFrom.
+    await expect(
+      TokenOfFriendship.transferFrom(owner.address, secondAddress.address, 1)
+    ).to.be.revertedWith(msg);
   });
 });

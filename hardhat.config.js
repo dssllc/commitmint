@@ -43,7 +43,7 @@ module.exports = {
   },
   gasReporter: {
     currency: "USD",
-    enabled: false,
+    enabled: true,
     showTimeSpent: true,
     coinmarketcap: cmcAPIKey
   },
