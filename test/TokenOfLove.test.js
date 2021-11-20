@@ -16,24 +16,12 @@ describe("TokenOfLove", function () {
     await TokenOfLove.deployed();
   });
 
-  it("should require payment to request", async function () {
-    await expect(
-      TokenOfLove.offer(thirdAddress.address)
-    ).to.be.reverted;
-  });
-
-  it("should require the correct payment to request", async function () {
+  it("should require an amount greater than zero to offer a token", async function () {
     let msg = "InvalidPayment";
     // Overpayment.
     let overrides = {
-      value: ethers.utils.parseEther(".1")
+      value: ethers.utils.parseEther("0")
     };
-    await expect(
-      TokenOfLove.offer(thirdAddress.address, overrides)
-    ).to.be.revertedWith(msg);
-    // Underpayment.
-    overrides.value = ethers.utils.parseEther(".00001")
-    // Attempt request.
     await expect(
       TokenOfLove.offer(thirdAddress.address, overrides)
     ).to.be.revertedWith(msg);
@@ -65,7 +53,7 @@ describe("TokenOfLove", function () {
     let newBurnBalance = await ethers.provider.getBalance(BURN_ADDRESS)
     expect(newBurnBalance).to.equal(burnBalance.add(overrides.value));
     // Expect contract amount to be 0.
-    expect(await ethers.provider.getBalance(BURN_ADDRESS)).to.equal(0);
+    expect(await ethers.provider.getBalance(TokenOfLove.address)).to.equal(0);
   });
 
   it("should not allow transfer approvals", async function () {
