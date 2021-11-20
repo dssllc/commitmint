@@ -12,7 +12,7 @@ import InfoIcon from "@material-ui/icons/Info";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import PeopleIcon from "@material-ui/icons/People";
 
-import logo from '../logo-full.png'
+import logo from '../assets/logo-full.png'
 
 const useStyles = makeStyles((theme) => ({
   appBar: {

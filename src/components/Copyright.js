@@ -2,11 +2,15 @@ import { Typography, makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {
+    [theme.breakpoints.down("sm")]: {
+      position: 'static'
+    },
     padding: theme.spacing(3),
     flexGrow: 1,
     position: 'absolute',
     bottom: theme.spacing(1),
-    left: '40vw'
+    left: '40vw',
+    color: '#828282'
   },
 }));
 
