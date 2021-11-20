@@ -13,7 +13,7 @@ import {
 import ConnectWallet from "../components/ConnectWallet";
 import { useWeb3React } from "@web3-react/core";
 import { ethers } from "ethers";
-import TokenOfFriendship from "../artifacts/contracts/TokenOfFriendship.sol/TokenOfFriendship.json";
+import TokenOfLove from "../artifacts/contracts/TokenOfLove.sol/TokenOfLove.json";
 import { LOVE_CONTRACT_ADDRESS } from '../constants';
 
 import walletDp1 from "../assets/wallet_dp1.png";
@@ -130,7 +130,7 @@ export default function TokenOfLove() {
 
  async function sendOffer() {
     const signer = web3React.library.getSigner(web3React.account);
-    const tokenContract = new ethers.Contract(LOVE_CONTRACT_ADDRESS, TokenOfFriendship.abi, signer);
+    const tokenContract = new ethers.Contract(LOVE_CONTRACT_ADDRESS, TokenOfLove.abi, signer);
     let overrides = {
       value: ethers.utils.parseEther(".001")
     };
