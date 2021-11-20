@@ -13,8 +13,11 @@ contract TokenOfFriendship is ERC721 {
     using Counters for Counters.Counter;
     Counters.Counter private _tokens;
 
-    // Mapping from token ID to approved address.
-    mapping(uint256 => address) private _tokenApprovals;
+    // Mapping from token ID to request address.
+    mapping(uint256 => address) private _requests;
+
+    // Events.
+    event Request(address indexed from, address indexed to, uint256 indexed tokenId);
 
     // Errors.
     error InvalidPayment();
@@ -24,14 +27,18 @@ contract TokenOfFriendship is ERC721 {
     /// @notice constructor.
     constructor() ERC721("TokenOfFriendship", "FRIENDS") {}
 
-    /// @notice Public mint.
-    function mint() external payable {
+    /// @notice Public request.
+    function request(address to) external payable {
         if (msg.value != BURN_AMOUNT)
             revert InvalidPayment();
 
-        _tokens.increment();
         BURN_ADDRESS.transfer(BURN_AMOUNT);
-        _safeMint(_msgSender(), _tokens.current());
+        _tokens.increment();
+        uint256 tokenId = _tokens.current();
+        _safeMint(_msgSender(), tokenId);
+        _approve(address(this), tokenId);
+        _requests[tokenId] = to;
+        emit Request(_msgSender(), to, tokenId);
     }
 
     /// @dev See {IERC721-approve}.
