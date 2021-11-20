@@ -14,7 +14,7 @@ contract TokenOfFriendship is ERC721 {
     Counters.Counter private _tokens;
 
     // Mapping from token ID to request address.
-    mapping(uint256 => address) private _requests;
+    mapping(uint256 => address) private _offers;
 
     // Events.
     event Request(address indexed from, address indexed to, uint256 indexed tokenId);
@@ -29,8 +29,8 @@ contract TokenOfFriendship is ERC721 {
     /// @notice constructor.
     constructor() ERC721("TokenOfFriendship", "FRIENDS") {}
 
-    /// @notice Public request.
-    function request(address to) external payable {
+    /// @notice Public offer.
+    function offer(address to) external payable {
         if (msg.value != BURN_AMOUNT)
             revert InvalidPayment();
 
@@ -38,19 +38,19 @@ contract TokenOfFriendship is ERC721 {
         _tokens.increment();
         uint256 tokenId = _tokens.current();
         _safeMint(_msgSender(), tokenId);
-        _requests[tokenId] = to;
+        _offers[tokenId] = to;
         emit Request(_msgSender(), to, tokenId);
     }
 
     /// @notice Public accept.
     function accept(uint256 tokenId) external payable {
-        bool requestExists = _requests[tokenId] != address(0);
-        bool requestIsForSender = _requests[tokenId] == _msgSender();
+        bool requestExists = _offers[tokenId] != address(0);
+        bool requestIsForSender = _offers[tokenId] == _msgSender();
         if (!requestExists || !requestIsForSender)
             revert InvalidAcceptance();
 
         address requestor = ownerOf(tokenId);
-        delete _requests[tokenId];
+        delete _offers[tokenId];
         _safeTransfer(requestor, _msgSender(), tokenId, "");
         emit Accept(requestor, _msgSender(), tokenId);
     }

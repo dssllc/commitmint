@@ -1,15 +1,17 @@
 import {
-    Container,
-    Typography,
-    makeStyles,
-    Grid,
-    Box,
-    Button
-  } from "@material-ui/core";
-  import { Link } from 'react-router-dom';
+  Container,
+  Typography,
+  makeStyles,
+  Grid,
+  Box,
+  Button
+} from "@material-ui/core";
+import walletLogos from '../assets/metamask+phantom.png';
+import { useWeb3React } from '@web3-react/core';
+import { InjectedConnector } from '@web3-react/injected-connector';
 
-  import walletLogos from '../assets/metamask+phantom.png'
-  
+const injected = new InjectedConnector({ supportedChainIds: [1, 4, 1337] });
+
 const useStyles = makeStyles((theme) => ({
     container: {
         marginTop: theme.spacing(4),
@@ -64,17 +66,28 @@ const useStyles = makeStyles((theme) => ({
          },
     }
 }));
-function ConnectWallet() {
+
+function ConnectWallet(props) {
+    if (!props.w3r) {
+      throw new Error('Missing web3React');
+    }
+    const web3React = props.w3r;
+
     const classes = useStyles();
+
+    function initConnection() {
+      web3React.activate(injected);
+    }
 
     return (
         <Container maxWidth="md" className={classes.container}>
-            <Grid container item justify="center">
+            <Grid container item justifyContent="center">
                 <Grid container item xs={12} md={8} direction="column" alignItems="flex-end">
                     <Button
                         variant="contained"
                         className={classes.ctaButton}
                         disableElevation
+                        onClick={initConnection}
                     >
                         Connect your Wallet
                     </Button>
