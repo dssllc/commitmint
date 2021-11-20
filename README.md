@@ -100,3 +100,15 @@ npx hardhat help
    * Open another terminal in the same directory and run `npx hardhat run scripts/deploy-tokens.js --network localhost`
 5. Update the contract address constants
    * Update addresses in `src/constants.js` with addresses from step 4
+
+### Dev Notes
+
+1. Be sure to setup the localhost custom RPC in metamask
+   * Name: Localhost 8545
+   * New RPC URL: http://localhost:8545
+   * Chain ID: 1337
+   * Currency Symbol: ETH
+2. Reset the Metamask account each time the chain is restarted
+  * The nonce resets with the chain and metamask gets out of sync
+  * MetaMask > Settings > Advanced > Reset Account
+     * Do this for each account/wallet
