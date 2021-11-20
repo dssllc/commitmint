@@ -43,7 +43,7 @@ contract TokenOfLove is ERC721 {
     }
 
     /// @notice Public accept.
-    function accept(uint256 tokenId) external payable {
+    function accept(uint256 tokenId) external {
         bool requestExists = _offers[tokenId] != address(0);
         bool requestIsForSender = _offers[tokenId] == _msgSender();
         if (!requestExists || !requestIsForSender)

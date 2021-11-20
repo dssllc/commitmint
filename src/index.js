@@ -10,6 +10,7 @@ import Hero from "./routes/Hero";
 import About from "./routes/About";
 import TokenOfLove from "./routes/TokenOfLove";
 import TokenOfFriendship from "./routes/TokenOfFriendship";
+import AcceptLove from "./routes/AcceptLove";
 
 ReactDOM.render(
   <BrowserRouter>
@@ -18,6 +19,7 @@ ReactDOM.render(
         <Route index element={<Hero />} />
         <Route path="about" element={<About />} />
         <Route path="love" element={<TokenOfLove />} />
+        <Route path="love/accept" element={<AcceptLove />} />
         <Route path="friendship" element={<TokenOfFriendship />} />
       </Route>
     </Routes>
