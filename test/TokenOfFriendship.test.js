@@ -46,7 +46,7 @@ describe("TokenOfFriendship", function () {
     // Get current balance of owner.
     let ownerBalance = await ethers.provider.getBalance(owner.address);
     // Get current balance of burn address.
-    expect((await ethers.provider.getBalance(BURN_ADDRESS))).to.equal(0);
+    let burnBalance = await ethers.provider.getBalance(BURN_ADDRESS);
     // Setup token and request.
     await expect(TokenOfFriendship.offer(thirdAddress.address, overrides))
       .to.emit(TokenOfFriendship, "Request")
@@ -62,7 +62,8 @@ describe("TokenOfFriendship", function () {
       ethers.utils.parseEther(".002")
     );
     // Expect burn address to have the burned ether.
-    expect((await ethers.provider.getBalance(BURN_ADDRESS))).to.equal(overrides.value);
+    let newBurnBalance = await ethers.provider.getBalance(BURN_ADDRESS)
+    expect(newBurnBalance).to.equal(burnBalance.add(overrides.value));
   });
 
   it("should not allow transfer approvals", async function () {
