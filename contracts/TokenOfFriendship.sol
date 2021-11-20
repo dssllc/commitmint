@@ -18,11 +18,13 @@ contract TokenOfFriendship is ERC721 {
 
     // Events.
     event Request(address indexed from, address indexed to, uint256 indexed tokenId);
+    event Accept(address indexed from, address indexed to, uint256 indexed tokenId);
 
     // Errors.
     error InvalidPayment();
     error NoApprovals();
     error NoTransfers();
+    error InvalidAcceptance();
 
     /// @notice constructor.
     constructor() ERC721("TokenOfFriendship", "FRIENDS") {}
@@ -36,9 +38,21 @@ contract TokenOfFriendship is ERC721 {
         _tokens.increment();
         uint256 tokenId = _tokens.current();
         _safeMint(_msgSender(), tokenId);
-        _approve(address(this), tokenId);
         _requests[tokenId] = to;
         emit Request(_msgSender(), to, tokenId);
+    }
+
+    /// @notice Public accept.
+    function accept(uint256 tokenId) external payable {
+        bool requestExists = _requests[tokenId] != address(0);
+        bool requestIsForSender = _requests[tokenId] == _msgSender();
+        if (!requestExists || !requestIsForSender)
+            revert InvalidAcceptance();
+
+        address requestor = ownerOf(tokenId);
+        delete _requests[tokenId];
+        _safeTransfer(requestor, _msgSender(), tokenId, "");
+        emit Accept(requestor, _msgSender(), tokenId);
     }
 
     /// @dev See {IERC721-approve}.
@@ -46,7 +60,7 @@ contract TokenOfFriendship is ERC721 {
         address to,
         uint256 tokenId
     ) public virtual override {
-        to; tokenId; revert NoApprovals();
+        revert NoApprovals();
     }
 
     /// @dev See {IERC721-setApprovalForAll}.
@@ -63,7 +77,7 @@ contract TokenOfFriendship is ERC721 {
         address to,
         uint256 tokenId
     ) public virtual override {
-        from; to; tokenId; revert NoTransfers();
+        revert NoTransfers();
     }
 
     /// @dev See {IERC721-safeTransferFrom}.

@@ -63,8 +63,6 @@ describe("TokenOfFriendship", function () {
     );
     // Expect burn address to have the burned ether.
     expect((await ethers.provider.getBalance(BURN_ADDRESS))).to.equal(overrides.value);
-    // Expect approval to be set for contract.
-    expect(await TokenOfFriendship.getApproved(1)).to.equal(TokenOfFriendship.address);
   });
 
   it("should not allow transfer approvals", async function () {
@@ -85,5 +83,28 @@ describe("TokenOfFriendship", function () {
     await expect(
       TokenOfFriendship.transferFrom(owner.address, secondAddress.address, 1)
     ).to.be.revertedWith(msg);
+  });
+
+  it("should not confirm invalid acceptance", async function () {
+    let msg = "InvalidAcceptance";
+    // Attempt accept for missing request.
+    await expect(
+      TokenOfFriendship.accept(2)
+    ).to.be.revertedWith(msg);
+    // Attempt accept for wrong request.
+    let secondAddressConnection = TokenOfFriendship.connect(secondAddress);
+    await expect(
+      secondAddressConnection.accept(1)
+    ).to.be.revertedWith(msg);
+  });
+
+  it("should confirm valid acceptance", async function () {
+    // Accept request.
+    let thirdAddressConnection = TokenOfFriendship.connect(thirdAddress);
+    await expect(thirdAddressConnection.accept(1))
+      .to.emit(TokenOfFriendship, "Accept")
+      .withArgs(owner.address, thirdAddress.address, 1);
+    // Verify token is transfered to sender
+    expect(await TokenOfFriendship.ownerOf(1)).to.equal(thirdAddress.address);
   });
 });
