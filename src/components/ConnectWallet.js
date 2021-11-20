@@ -69,7 +69,7 @@ function ConnectWallet() {
 
     return (
         <Container maxWidth="md" className={classes.container}>
-            <Grid container item justify="center">
+            <Grid container item justifyContent="center">
                 <Grid container item xs={12} md={8} direction="column" alignItems="flex-end">
                     <Button
                         variant="contained"

@@ -1,8 +1,12 @@
 import {
   Container,
-  Typography,
-  makeStyles
+  makeStyles,
+  Grid,
 } from "@material-ui/core";
+
+import ConnectWallet from "../components/ConnectWallet";
+import MetadataForm from "../components/MetadataForm";
+import UserAccountPanel from "../components/UserAccountPanel";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -14,11 +18,18 @@ const useStyles = makeStyles((theme) => ({
 export default function TokenOfFriendship() {
   const classes = useStyles();
 
+  const isWeb3Wallet = true;
+
+  if (!isWeb3Wallet) {
+    return <ConnectWallet />
+  }
+
   return (
     <Container maxWidth="md" className={classes.container}>
-      <Typography variant="body1" paragraph>
-        Token of Friendship
-      </Typography>
+      <Grid container item justify="center" spacing={3}>
+        <MetadataForm />
+        <UserAccountPanel />
+      </Grid>
     </Container>
   );
 }
