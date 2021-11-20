@@ -6,6 +6,8 @@ import TopBar from './components/TopBar';
 import Hero from './components/Hero';
 import Copyright from './components/Copyright';
 
+import "@fontsource/dm-sans";
+
 const themeLight = createTheme({
   palette: {
     // background: {
@@ -14,7 +16,18 @@ const themeLight = createTheme({
     primary: {
       main: "#095B86"
     }
-  }
+  },
+  typography: {
+    fontFamily: [
+      'DM Sans',
+      '-apple-system',
+      'BlinkMacSystemFont',
+      'Roboto',
+      '"Helvetica Neue"',
+      'Arial',
+      'sans-serif',
+    ].join(','),
+  },
 });
 
 function App() {
