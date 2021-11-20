@@ -87,3 +87,16 @@ npx hardhat node
 node scripts/sample-script.js
 npx hardhat help
 ```
+
+## Local dev setup
+
+1. Install application
+   * Open a terminal, clone repo, open the directory and run `yarn install`
+2. Start the front end
+   * Open another terminal in the same directory and run `yarn start`
+3. Start the local blockchain node
+   * Open another terminal in the same directory and run `npx hardhat node`
+4. Deploy the contracts to the local node
+   * Open another terminal in the same directory and run `npx hardhat run scripts/deploy-tokens.js --network localhost`
+5. Update the contract address constants
+   * Update addresses in `src/constants.js` with addresses from step 4

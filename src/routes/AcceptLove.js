@@ -2,6 +2,7 @@
 import { useState } from "react";
 import {
   Container,
+  Typography,
   makeStyles,
   Grid,
   Box,
@@ -12,7 +13,7 @@ import {
 import ConnectWallet from "../components/ConnectWallet";
 import { useWeb3React } from "@web3-react/core";
 import { ethers } from "ethers";
-import TokenOfLoveContract from "../artifacts/contracts/TokenOfLove.sol/TokenOfLove.json";
+import TokenOfLove from "../artifacts/contracts/TokenOfLove.sol/TokenOfLove.json";
 import { LOVE_CONTRACT_ADDRESS } from '../constants';
 
 import walletDp1 from "../assets/wallet_dp1.png";
@@ -108,11 +109,12 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function TokenOfLove() {
+export default function AcceptLove() {
   const classes = useStyles();
 
-  const [partnerAddress, setPartnerAddress] = useState("");
-  const [offerSent, setOfferSent] = useState(false);
+  const [tokenOfLoveId, setTokenOfLoveId] = useState("");
+  const [offerAccepted, setOfferAccepted] = useState(false);
+  const [invalidAcceptance, setInvalidAcceptance] = useState("");
 
   const web3React = useWeb3React();
 
@@ -127,30 +129,42 @@ export default function TokenOfLove() {
     return output;
   }
 
- async function sendOffer() {
-    const signer = web3React.library.getSigner(web3React.account);
-    const tokenContract = new ethers.Contract(LOVE_CONTRACT_ADDRESS, TokenOfLoveContract.abi, signer);
-    let overrides = {
-      value: ethers.utils.parseEther(".001")
-    };
-    const txn = await tokenContract.offer(partnerAddress, overrides);
-    await txn.wait();
-    setOfferSent(true);
+  async function acceptOffer() {
+    try {
+      const signer = web3React.library.getSigner(web3React.account);
+      const tokenContract = new ethers.Contract(LOVE_CONTRACT_ADDRESS, TokenOfLove.abi, signer);
+      const txn = await tokenContract.accept(tokenOfLoveId);
+      await txn.wait();
+      setOfferAccepted(true);
+    } catch (e) {
+      if (!!e.data?.message.match(/InvalidAcceptance/)) {
+        setInvalidAcceptance("This wallet can not accept this token");
+      }
+      if (!!e.message.match(/user denied transaction/i)) {
+        setInvalidAcceptance("Transaction was rejected");
+      }
+    }
   }
+
+  function validId(tokenId) {
+    return !!tokenId.match(/^\d+$/)
+  };
 
   return (
     <Container maxWidth="md" className={classes.container}>
       <Grid container item justifyContent="center" spacing={3}>
-        {!offerSent &&
+        {!offerAccepted &&
         <Grid container item xs={12} md={7} direction="column" alignItems="flex-end">
 
           <Grid container item component="form" justifyContent="center" direction="column" className={classes.leftPanel}>
             <TextField
-              label="Partner's Wallet Address"
+              label="Token of Love ID"
               color="primary"
               variant="outlined"
               className={`${classes.input} ${classes.inputLast}`}
-              onChange={e => setPartnerAddress(e.target.value)}
+              onChange={e => setTokenOfLoveId(e.target.value)}
+              error={invalidAcceptance}
+              helperText={!!invalidAcceptance ? invalidAcceptance : null}
             />
           </Grid>
 
@@ -158,18 +172,16 @@ export default function TokenOfLove() {
             variant="contained"
             className={classes.ctaButton}
             disableElevation
-            onClick={sendOffer}
+            onClick={acceptOffer}
           >
-            Send token
+            Accept token ♥︎
           </Button>
 
         </Grid>
         }
-        {offerSent &&
+        {offerAccepted &&
         <Typography variant="h5" component="h3">
-          Offer sent! Check your wallet for the transaction status and token ID.
-          <br />
-          Next steps: send the token ID to your partner and ask them to visit the accept link.
+          Offer Accepted!!! 🎉🚨
         </Typography>
         }
         <Grid item xs={12} md={4}>

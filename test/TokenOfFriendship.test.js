@@ -18,7 +18,7 @@ describe("TokenOfFriendship", function () {
 
   it("should require payment to request", async function () {
     await expect(
-      TokenOfFriendship.request(thirdAddress.address)
+      TokenOfFriendship.offer(thirdAddress.address)
     ).to.be.reverted;
   });
 
@@ -29,13 +29,13 @@ describe("TokenOfFriendship", function () {
       value: ethers.utils.parseEther(".1")
     };
     await expect(
-      TokenOfFriendship.request(thirdAddress.address, overrides)
+      TokenOfFriendship.offer(thirdAddress.address, overrides)
     ).to.be.revertedWith(msg);
     // Underpayment.
     overrides.value = ethers.utils.parseEther(".00001")
     // Attempt request.
     await expect(
-      TokenOfFriendship.request(thirdAddress.address, overrides)
+      TokenOfFriendship.offer(thirdAddress.address, overrides)
     ).to.be.revertedWith(msg);
   });
 
@@ -46,9 +46,9 @@ describe("TokenOfFriendship", function () {
     // Get current balance of owner.
     let ownerBalance = await ethers.provider.getBalance(owner.address);
     // Get current balance of burn address.
-    expect((await ethers.provider.getBalance(BURN_ADDRESS))).to.equal(0);
+    let burnBalance = await ethers.provider.getBalance(BURN_ADDRESS);
     // Setup token and request.
-    await expect(TokenOfFriendship.request(thirdAddress.address, overrides))
+    await expect(TokenOfFriendship.offer(thirdAddress.address, overrides))
       .to.emit(TokenOfFriendship, "Request")
       .withArgs(owner.address, thirdAddress.address, 1);
     // Verify token is requested to the owner.
@@ -62,7 +62,8 @@ describe("TokenOfFriendship", function () {
       ethers.utils.parseEther(".002")
     );
     // Expect burn address to have the burned ether.
-    expect((await ethers.provider.getBalance(BURN_ADDRESS))).to.equal(overrides.value);
+    let newBurnBalance = await ethers.provider.getBalance(BURN_ADDRESS)
+    expect(newBurnBalance).to.equal(burnBalance.add(overrides.value));
   });
 
   it("should not allow transfer approvals", async function () {

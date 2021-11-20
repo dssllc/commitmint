@@ -4,7 +4,7 @@ pragma solidity 0.8.10;
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
-contract TokenOfFriendship is ERC721 {
+contract TokenOfLove is ERC721 {
     // Contants.
     uint256 constant private BURN_AMOUNT = 0.001 ether;
     address payable constant private BURN_ADDRESS = payable(0x000000000000000000000000000000000000dEaD);
@@ -27,7 +27,7 @@ contract TokenOfFriendship is ERC721 {
     error InvalidAcceptance();
 
     /// @notice constructor.
-    constructor() ERC721("TokenOfFriendship", "FRIENDS") {}
+    constructor() ERC721("TokenOfLove", "LOVERS") {}
 
     /// @notice Public offer.
     function offer(address to) external payable {

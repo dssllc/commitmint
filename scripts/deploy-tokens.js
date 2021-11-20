@@ -1,12 +1,19 @@
 const hre = require("hardhat");
 
 async function main() {
-  const Greeter = await hre.ethers.getContractFactory("Greeter");
-  const greeter = await Greeter.deploy("Hello, Hardhat!");
+  let contract = await hre.ethers.getContractFactory("TokenOfFriendship");
+  const TokenOfFriendship = await contract.deploy();
 
-  await greeter.deployed();
+  await TokenOfFriendship.deployed();
 
-  console.log("Greeter deployed to:", greeter.address);
+  console.log("TokenOfFriendship deployed to:", TokenOfFriendship.address);
+
+  contract = await hre.ethers.getContractFactory("TokenOfLove");
+  const TokenOfLove = await contract.deploy();
+
+  await TokenOfLove.deployed();
+
+  console.log("TokenOfLove deployed to:", TokenOfLove.address);
 }
 
 main()
