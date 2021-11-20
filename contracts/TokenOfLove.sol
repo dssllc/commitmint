@@ -17,7 +17,7 @@ contract TokenOfLove is ERC721 {
     mapping(uint256 => address) private _offers;
 
     // Events.
-    event Request(address indexed from, address indexed to, uint256 indexed tokenId);
+    event Offer(address indexed from, address indexed to, uint256 indexed tokenId);
     event Accept(address indexed from, address indexed to, uint256 indexed tokenId);
 
     // Errors.
@@ -27,7 +27,7 @@ contract TokenOfLove is ERC721 {
     error InvalidAcceptance();
 
     /// @notice constructor.
-    constructor() ERC721("TokenOfLove", "LOVERS") {}
+    constructor() ERC721("TokenOfLove", "LOVE") {}
 
     /// @notice Public offer.
     function offer(address to) external payable {
@@ -39,7 +39,7 @@ contract TokenOfLove is ERC721 {
         uint256 tokenId = _tokens.current();
         _safeMint(_msgSender(), tokenId);
         _offers[tokenId] = to;
-        emit Request(_msgSender(), to, tokenId);
+        emit Offer(_msgSender(), to, tokenId);
     }
 
     /// @notice Public accept.

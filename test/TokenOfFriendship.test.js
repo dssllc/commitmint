@@ -5,8 +5,6 @@ describe("TokenOfFriendship", function () {
 
   let contract, TokenOfFriendship, owner, secondAddress;
 
-  const BURN_ADDRESS = "0x000000000000000000000000000000000000dead";
-
   before(async function() {
     // Get addresses.
     [owner, secondAddress, thirdAddress] = await ethers.getSigners();
@@ -16,54 +14,13 @@ describe("TokenOfFriendship", function () {
     await TokenOfFriendship.deployed();
   });
 
-  it("should require payment to request", async function () {
-    await expect(
-      TokenOfFriendship.offer(thirdAddress.address)
-    ).to.be.reverted;
-  });
-
-  it("should require the correct payment to request", async function () {
-    let msg = "InvalidPayment";
-    // Overpayment.
-    let overrides = {
-      value: ethers.utils.parseEther(".1")
-    };
-    await expect(
-      TokenOfFriendship.offer(thirdAddress.address, overrides)
-    ).to.be.revertedWith(msg);
-    // Underpayment.
-    overrides.value = ethers.utils.parseEther(".00001")
-    // Attempt request.
-    await expect(
-      TokenOfFriendship.offer(thirdAddress.address, overrides)
-    ).to.be.revertedWith(msg);
-  });
-
-  it("should burn the correct amount of ether to request", async function () {
-    let overrides = {
-      value: ethers.utils.parseEther(".001")
-    };
-    // Get current balance of owner.
-    let ownerBalance = await ethers.provider.getBalance(owner.address);
-    // Get current balance of burn address.
-    let burnBalance = await ethers.provider.getBalance(BURN_ADDRESS);
-    // Setup token and request.
-    await expect(TokenOfFriendship.offer(thirdAddress.address, overrides))
-      .to.emit(TokenOfFriendship, "Request")
+  it("should create an offer and mint a token", async function () {
+    // Setup token and offer.
+    await expect(TokenOfFriendship.offer(thirdAddress.address))
+      .to.emit(TokenOfFriendship, "Offer")
       .withArgs(owner.address, thirdAddress.address, 1);
-    // Verify token is requested to the owner.
+    // Verify token is minted to the owner.
     expect(await TokenOfFriendship.ownerOf(1)).to.equal(owner.address);
-    // Expect the owner balance to be less the burn amount
-    // and within .002ETH for gas
-    expect(
-      await ethers.provider.getBalance(owner.address)
-    ).to.be.closeTo(
-      ownerBalance.sub(overrides.value),
-      ethers.utils.parseEther(".002")
-    );
-    // Expect burn address to have the burned ether.
-    let newBurnBalance = await ethers.provider.getBalance(BURN_ADDRESS)
-    expect(newBurnBalance).to.equal(burnBalance.add(overrides.value));
   });
 
   it("should not allow transfer approvals", async function () {

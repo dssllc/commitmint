@@ -49,7 +49,7 @@ describe("TokenOfLove", function () {
     let burnBalance = await ethers.provider.getBalance(BURN_ADDRESS);
     // Setup token and request.
     await expect(TokenOfLove.offer(thirdAddress.address, overrides))
-      .to.emit(TokenOfLove, "Request")
+      .to.emit(TokenOfLove, "Offer")
       .withArgs(owner.address, thirdAddress.address, 1);
     // Verify token is requested to the owner.
     expect(await TokenOfLove.ownerOf(1)).to.equal(owner.address);
@@ -64,6 +64,8 @@ describe("TokenOfLove", function () {
     // Expect burn address to have the burned ether.
     let newBurnBalance = await ethers.provider.getBalance(BURN_ADDRESS)
     expect(newBurnBalance).to.equal(burnBalance.add(overrides.value));
+    // Expect contract amount to be 0.
+    expect(await ethers.provider.getBalance(BURN_ADDRESS)).to.equal(0);
   });
 
   it("should not allow transfer approvals", async function () {
