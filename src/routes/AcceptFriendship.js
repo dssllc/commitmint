@@ -13,14 +13,10 @@ import {
 import ConnectWallet from "../components/ConnectWallet";
 import { useWeb3React } from "@web3-react/core";
 import { ethers } from "ethers";
-import TokenOfFriendshipContract from "../artifacts/contracts/TokenOfFriendship.sol/TokenOfFriendship.json";
+import TokenOfFriendship from "../artifacts/contracts/TokenOfFriendship.sol/TokenOfFriendship.json";
 import { FRIEND_CONTRACT_ADDRESS } from '../constants';
 
 import walletDp1 from "../assets/wallet_dp1.png";
-
-import ConnectWallet from "../components/ConnectWallet";
-import MetadataForm from "../components/MetadataForm";
-import UserAccountPanel from "../components/UserAccountPanel";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -113,12 +109,12 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function TokenOfFriendship() {
+export default function AcceptLove() {
   const classes = useStyles();
 
-  const [friendsAddress, setFriendAddress] = useState("");
-  const [offerSent, setOfferSent] = useState(false);
-  const [errorMsg, setErrorMsg] = useState(null);
+  const [tokenOfLoveId, setTokenOfLoveId] = useState("");
+  const [offerAccepted, setOfferAccepted] = useState(false);
+  const [invalidAcceptance, setInvalidAcceptance] = useState("");
 
   const web3React = useWeb3React();
 
@@ -133,27 +129,19 @@ export default function TokenOfFriendship() {
     return output;
   }
 
-  function checkAddress(address) {
-    try {
-      ethers.utils.getAddress(address);
-      setFriendAddress(address);
-      setErrorMsg(null);
-    } catch (e) {
-      setErrorMsg("Please enter a valid address");
-      return false;
-    }
-  }
-
-  async function sendOffer() {
+  async function acceptOffer() {
     try {
       const signer = web3React.library.getSigner(web3React.account);
-      const tokenContract = new ethers.Contract(FRIEND_CONTRACT_ADDRESS, TokenOfFriendshipContract.abi, signer);
-      const txn = await tokenContract.offer(friendsAddress);
+      const tokenContract = new ethers.Contract(FRIEND_CONTRACT_ADDRESS, TokenOfFriendship.abi, signer);
+      const txn = await tokenContract.accept(tokenOfLoveId);
       await txn.wait();
-      setOfferSent(true);
+      setOfferAccepted(true);
     } catch (e) {
+      if (!!e.data?.message.match(/InvalidAcceptance/)) {
+        setInvalidAcceptance("This wallet can not accept this token");
+      }
       if (!!e.message.match(/user denied transaction/i)) {
-        setErrorMsg("Transaction was rejected");
+        setInvalidAcceptance("Transaction was rejected");
       }
     }
   }
@@ -161,18 +149,18 @@ export default function TokenOfFriendship() {
   return (
     <Container maxWidth="md" className={classes.container}>
       <Grid container item justifyContent="center" spacing={3}>
-        {!offerSent &&
+        {!offerAccepted &&
         <Grid container item xs={12} md={7} direction="column" alignItems="flex-end">
 
           <Grid container item component="form" justifyContent="center" direction="column" className={classes.leftPanel}>
             <TextField
-              label="Friend's Wallet Address"
+              label="Token of Friendship ID"
               color="primary"
               variant="outlined"
               className={`${classes.input} ${classes.inputLast}`}
-              onChange={e => checkAddress(e.target.value)}
-              error={!!errorMsg}
-              helperText={errorMsg ? errorMsg : null}
+              onChange={e => setTokenOfLoveId(e.target.value)}
+              error={invalidAcceptance}
+              helperText={!!invalidAcceptance ? invalidAcceptance : null}
             />
           </Grid>
 
@@ -180,18 +168,16 @@ export default function TokenOfFriendship() {
             variant="contained"
             className={classes.ctaButton}
             disableElevation
-            onClick={sendOffer}
+            onClick={acceptOffer}
           >
-            Send token
+            Accept token ♥︎
           </Button>
 
         </Grid>
         }
-        {offerSent &&
+        {offerAccepted &&
         <Typography variant="h5" component="h3">
-          Offer sent! Check your wallet for the transaction status and token ID.
-          <br />
-          Next steps: send the token ID to your partner and ask them to visit the accept link.
+          Offer Accepted!!! 🎉🚨
         </Typography>
         }
         <Grid item xs={12} md={4}>

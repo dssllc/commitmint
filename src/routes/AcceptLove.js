@@ -146,10 +146,6 @@ export default function AcceptLove() {
     }
   }
 
-  function validId(tokenId) {
-    return !!tokenId.match(/^\d+$/)
-  };
-
   return (
     <Container maxWidth="md" className={classes.container}>
       <Grid container item justifyContent="center" spacing={3}>
