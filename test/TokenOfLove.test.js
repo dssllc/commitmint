@@ -55,47 +55,4 @@ describe("TokenOfLove", function () {
     // Expect contract amount to be 0.
     expect(await ethers.provider.getBalance(TokenOfLove.address)).to.equal(0);
   });
-
-  it("should not allow transfer approvals", async function () {
-    let msg = "NoApprovals";
-    // Attempt approve.
-    await expect(
-      TokenOfLove.approve(secondAddress.address, 1)
-    ).to.be.revertedWith(msg);
-    // Attempt setApprovalForAll.
-    await expect(
-      TokenOfLove.setApprovalForAll(secondAddress.address, true)
-    ).to.be.revertedWith(msg);
-  });
-
-  it("should not allow transfers", async function () {
-    let msg = "NoTransfers";
-    // Attempt transferFrom.
-    await expect(
-      TokenOfLove.transferFrom(owner.address, secondAddress.address, 1)
-    ).to.be.revertedWith(msg);
-  });
-
-  it("should not confirm invalid acceptance", async function () {
-    let msg = "InvalidAcceptance";
-    // Attempt accept for missing request.
-    await expect(
-      TokenOfLove.accept(2)
-    ).to.be.revertedWith(msg);
-    // Attempt accept for wrong request.
-    let secondAddressConnection = TokenOfLove.connect(secondAddress);
-    await expect(
-      secondAddressConnection.accept(1)
-    ).to.be.revertedWith(msg);
-  });
-
-  it("should confirm valid acceptance", async function () {
-    // Accept request.
-    let thirdAddressConnection = TokenOfLove.connect(thirdAddress);
-    await expect(thirdAddressConnection.accept(1))
-      .to.emit(TokenOfLove, "Accept")
-      .withArgs(owner.address, thirdAddress.address, 1);
-    // Verify token is transfered to sender
-    expect(await TokenOfLove.ownerOf(1)).to.equal(thirdAddress.address);
-  });
 });
