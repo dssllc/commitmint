@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import {
   Container,
   makeStyles,
@@ -8,6 +8,8 @@ import {
   Button,
   Avatar,
   TextField,
+  Typography,
+  Divider
 } from "@material-ui/core";
 import ConnectWallet from "../components/ConnectWallet";
 import { useWeb3React } from "@web3-react/core";
@@ -45,10 +47,33 @@ const useStyles = makeStyles((theme) => ({
     paddingRight: theme.spacing(2),
     display: "flex",
   },
+  notificationPanel: {
+    border: "2px solid #2F80ED",
+  },
   walletLogos: {
     margin: "0 auto",
     width: "250px",
     marginBottom: theme.spacing(3),
+  },
+  notificationHeading: {
+    display: 'block',
+    fontSize: "1.45rem",
+    fontWeight: "600",
+    color: "#333333",
+    lineHeight: "100%",
+    letterSpacing: 0,
+    marginBottom: theme.spacing(1),
+    textAlign: 'center'
+  },
+  notificationSubHeading: {
+    display: 'block',
+    fontSize: "1.15rem",
+    fontWeight: "400",
+    color: "#4F4F4F",
+    lineHeight: "100%",
+    letterSpacing: 0,
+    marginBottom: theme.spacing(1),
+    textAlign: 'center'
   },
   subHeading: {
     fontSize: ".75rem",
@@ -59,6 +84,21 @@ const useStyles = makeStyles((theme) => ({
     letterSpacing: 0,
     marginBottom: theme.spacing(1),
 
+  },
+  instructions: {
+    marginTop: theme.spacing(3),
+    padding: theme.spacing(2),
+    paddingLeft: theme.spacing(1),
+    paddingRight: theme.spacing(1),
+    border: "1px solid #BDBDBD",
+    borderRadius: "6px",
+    backgroundColor: "#F2F2F2",
+    fontSize: "1rem",
+    fontFamily: 'monospace',
+    fontWeight: "400",
+    color: "#333333",
+    width: "100%",
+    overflowWrap: 'anywhere',
   },
   walletAddress: {
     fontSize: "1.25rem",
@@ -104,7 +144,6 @@ const useStyles = makeStyles((theme) => ({
   divider: {
     width: "100%",
     marginBottom: theme.spacing(3),
-    // backgroundColor: "#333"
   }
 }));
 
@@ -115,6 +154,11 @@ export default function TokenOfLove() {
   const [partnerAddress, setPartnerAddress] = useState("");
   const [offerSent, setOfferSent] = useState(false);
   const [errorMsg, setErrorMsg] = useState(null);
+
+  const [tokenId, setTokenId] = useState('0x000000000000000000abc');
+
+  const [copySuccess, setCopySuccess] = useState('');
+  const instructions = useRef(null);
 
   const web3React = useWeb3React();
 
@@ -164,6 +208,16 @@ export default function TokenOfLove() {
     }
   }
 
+  function copyToClipboard(e) {
+    const text = instructions.current.innerText;
+    navigator.clipboard.writeText(text)
+    // document.execCommand('copy');
+    // This is just personal preference.
+    // I prefer to not show the whole text area selected.
+    e.target.focus();
+    setCopySuccess('Copied!');
+  };  
+
   return (
     <Container maxWidth="md" className={classes.container}>
       <Grid container item justifyContent="center" spacing={3}>
@@ -202,17 +256,39 @@ export default function TokenOfLove() {
             disableElevation
             onClick={sendOffer}
           >
-            Send token
+            Offer Token
           </Button>
 
         </Grid>
         }
         {offerSent &&
-        <Typography variant="h5" component="h3">
-          Offer sent! Check your wallet for the transaction status and token ID.
-          <br />
-          Next steps: send the token ID to your partner and ask them to visit the accept link.
-        </Typography>
+          <Grid container item xs={12} md={7} direction="column" alignItems="flex-end">
+            <Grid container item justifyContent="center" direction="column" className={classes.leftPanel}>
+              <Typography variant="h3" component="h3" className={classes.notificationHeading}>
+                Offer sent!
+              </Typography>
+              <Typography variant="h5" component="h3" className={classes.notificationSubHeading}>
+                Check your wallet for the transaction status and token ID.
+              </Typography>
+            </Grid>
+
+            <Grid container item justifyContent="center" direction="column" className={`${classes.leftPanel} ${classes.notificationPanel}`}>
+
+              <Typography variant="h3" component="h3" className={classes.notificationHeading}>
+                Next Steps
+              </Typography>
+              <Box variant="h5" component="h3" className={classes.notificationSubHeading}>
+                Ask your partner to visit the accept link and paste the token ID to accept the offer.
+                <div className={classes.instructions} ref={instructions}> Accept my Token of Love when you visit: <a href="#" className={classes.acceptLink}>{`${process.env.PUBLIC_URL}`}https://commintmint.app/love/accept</a>
+                  <br />
+                  and paste the
+                  <br />
+                  Token ID: {tokenId}
+                </div>
+                <Button onClick={copyToClipboard} variant="text">Copy message</Button>
+              </Box>
+            </Grid>
+          </Grid>
         }
         <Grid item xs={12} md={4}>
           <Grid container item direction="row" className={classes.rightPanel}>
