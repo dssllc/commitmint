@@ -1,7 +1,7 @@
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
 
-describe("TestToken", function () {
+describe("CommitmintToken", function () {
 
   let contract, TestToken, owner, secondAddress;
 
