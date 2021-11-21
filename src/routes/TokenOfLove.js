@@ -136,7 +136,6 @@ export default function TokenOfLove() {
       setPartnerAddress(address);
       setErrorMsg(null);
     } catch (e) {
-      console.log(e);
       setErrorMsg("Please enter a valid address");
       return false;
     }

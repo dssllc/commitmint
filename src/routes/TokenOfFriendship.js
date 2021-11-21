@@ -135,7 +135,6 @@ export default function TokenOfFriendship() {
       setFriendAddress(address);
       setErrorMsg(null);
     } catch (e) {
-      console.log(e);
       setErrorMsg("Please enter a valid address");
       return false;
     }
