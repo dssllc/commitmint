@@ -10,7 +10,7 @@ import walletLogos from '../assets/metamask+phantom.png';
 import { useWeb3React } from '@web3-react/core';
 import { InjectedConnector } from '@web3-react/injected-connector';
 
-const injected = new InjectedConnector({ supportedChainIds: [1, 4, 1337] });
+const injected = new InjectedConnector({ supportedChainIds: [4, 1337] });
 
 const useStyles = makeStyles((theme) => ({
     container: {
