@@ -9,7 +9,9 @@ import {
   Avatar,
   TextField,
   Typography,
-  Divider
+  Divider,
+  Backdrop,
+  CircularProgress
 } from "@material-ui/core";
 import ConnectWallet from "../components/ConnectWallet";
 import { useWeb3React } from "@web3-react/core";
@@ -146,6 +148,10 @@ const useStyles = makeStyles((theme) => ({
   divider: {
     width: "100%",
     marginBottom: theme.spacing(3),
+  },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: '#fff',
   }
 }));
 
@@ -156,6 +162,7 @@ export default function TokenOfLove() {
   const [partnerAddress, setPartnerAddress] = useState("");
   const [offerSent, setOfferSent] = useState(false);
   const [errorMsg, setErrorMsg] = useState(null);
+  const [openBackdrop, setOpenBackdrop] = useState(false);
 
   const [tokenId, setTokenId] = useState('0x000000000000000000abc');
 
@@ -189,6 +196,7 @@ export default function TokenOfLove() {
   async function sendOffer() {
 
     try {
+      setOpenBackdrop(true);
       const signer = web3React.library.getSigner(web3React.account);
       const tokenContract = new ethers.Contract(LOVE_CONTRACT_ADDRESS, TokenOfLoveContract.abi, signer);
       let overrides = {
@@ -197,7 +205,9 @@ export default function TokenOfLove() {
       const txn = await tokenContract.offer(partnerAddress, overrides);
       await txn.wait();
       setOfferSent(true);
+      setOpenBackdrop(false);
     } catch (e) {
+      setOpenBackdrop(false);
       if (!!e.data?.message.match(/InvalidPayment/)) {
         setErrorMsg("Payment must be greater than 0");
       }
@@ -218,10 +228,24 @@ export default function TokenOfLove() {
     // I prefer to not show the whole text area selected.
     e.target.focus();
     setCopySuccess('Copied!');
-  };  
+  };
 
   return (
     <Container maxWidth="md" className={classes.container}>
+
+      <Backdrop className={classes.backdrop} open={openBackdrop}>
+        <Grid container spacing={3}>
+          <Grid container item xs={12} justifyContent="center">
+            <CircularProgress color="inherit" />
+          </Grid>
+          <Grid container item xs={12} justifyContent="center">
+            <Typography component="p">
+              Creating your offer ❤️
+            </Typography>
+          </Grid>
+        </Grid>
+      </Backdrop>
+
       <Grid container item justifyContent="center" spacing={3}>
         {!offerSent &&
         <Grid container item xs={12} md={7} direction="column" alignItems="flex-end">

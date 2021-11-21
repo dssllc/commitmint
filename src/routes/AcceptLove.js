@@ -9,6 +9,8 @@ import {
   Button,
   Avatar,
   TextField,
+  Backdrop,
+  CircularProgress
 } from "@material-ui/core";
 import ConnectWallet from "../components/ConnectWallet";
 import { useWeb3React } from "@web3-react/core";
@@ -106,6 +108,10 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     marginBottom: theme.spacing(3),
     // backgroundColor: "#333"
+  },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: '#fff',
   }
 }));
 
@@ -115,6 +121,7 @@ export default function AcceptLove() {
   const [tokenOfLoveId, setTokenOfLoveId] = useState("");
   const [offerAccepted, setOfferAccepted] = useState(false);
   const [invalidAcceptance, setInvalidAcceptance] = useState("");
+  const [openBackdrop, setOpenBackdrop] = useState(false);
 
   const web3React = useWeb3React();
 
@@ -131,12 +138,15 @@ export default function AcceptLove() {
 
   async function acceptOffer() {
     try {
+      setOpenBackdrop(true);
       const signer = web3React.library.getSigner(web3React.account);
       const tokenContract = new ethers.Contract(LOVE_CONTRACT_ADDRESS, TokenOfLove.abi, signer);
       const txn = await tokenContract.accept(tokenOfLoveId);
       await txn.wait();
       setOfferAccepted(true);
+      setOpenBackdrop(false);
     } catch (e) {
+      setOpenBackdrop(false);
       if (!!e.data?.message.match(/InvalidAcceptance/)) {
         setInvalidAcceptance("This wallet can not accept this token");
       }
@@ -148,6 +158,20 @@ export default function AcceptLove() {
 
   return (
     <Container maxWidth="md" className={classes.container}>
+
+      <Backdrop className={classes.backdrop} open={openBackdrop}>
+        <Grid container spacing={3}>
+          <Grid container item xs={12} justifyContent="center">
+            <CircularProgress color="inherit" />
+          </Grid>
+          <Grid container item xs={12} justifyContent="center">
+            <Typography component="p">
+              Accepting the offer ❤️
+            </Typography>
+          </Grid>
+        </Grid>
+      </Backdrop>
+
       <Grid container item justifyContent="center" spacing={3}>
         {!offerAccepted &&
         // {!true &&
@@ -176,10 +200,10 @@ export default function AcceptLove() {
 
         </Grid>
         }
-        
-        {offerAccepted && 
+
+        {offerAccepted &&
           <Grid container item xs={12} md={7} direction="column" alignItems="flex-end">
-            <NotificationPanel action="receive token" /> 
+            <NotificationPanel action="receive token" />
           </Grid>
         }
 

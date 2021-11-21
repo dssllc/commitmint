@@ -9,6 +9,8 @@ import {
   Button,
   Avatar,
   TextField,
+  Backdrop,
+  CircularProgress
 } from "@material-ui/core";
 
 import { useWeb3React } from "@web3-react/core";
@@ -149,6 +151,10 @@ const useStyles = makeStyles((theme) => ({
   divider: {
     width: "100%",
     marginBottom: theme.spacing(3),
+  },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: '#fff',
   }
 }));
 
@@ -158,6 +164,7 @@ export default function TokenOfFriendship() {
   const [friendsAddress, setFriendAddress] = useState("");
   const [offerSent, setOfferSent] = useState(false);
   const [errorMsg, setErrorMsg] = useState(null);
+  const [openBackdrop, setOpenBackdrop] = useState(false);
 
   const [tokenId, setTokenId] = useState('0x000000000000000000abc');
 
@@ -190,12 +197,15 @@ export default function TokenOfFriendship() {
 
   async function sendOffer() {
     try {
+      setOpenBackdrop(true);
       const signer = web3React.library.getSigner(web3React.account);
       const tokenContract = new ethers.Contract(FRIEND_CONTRACT_ADDRESS, TokenOfFriendshipContract.abi, signer);
       const txn = await tokenContract.offer(friendsAddress);
       await txn.wait();
       setOfferSent(true);
+      setOpenBackdrop(false);
     } catch (e) {
+      setOpenBackdrop(false);
       if (!!e.message.match(/user denied transaction/i)) {
         setErrorMsg("Transaction was rejected");
       }
@@ -210,10 +220,24 @@ export default function TokenOfFriendship() {
     // I prefer to not show the whole text area selected.
     e.target.focus();
     setCopySuccess('Copied!');
-  };  
+  };
 
   return (
     <Container maxWidth="md" className={classes.container}>
+
+      <Backdrop className={classes.backdrop} open={openBackdrop}>
+        <Grid container spacing={3}>
+          <Grid container item xs={12} justifyContent="center">
+            <CircularProgress color="inherit" />
+          </Grid>
+          <Grid container item xs={12} justifyContent="center">
+            <Typography component="p">
+              Creating your offer ❤️
+            </Typography>
+          </Grid>
+        </Grid>
+      </Backdrop>
+
       <Grid container item justifyContent="center" spacing={3}>
         {!offerSent &&
         <Grid container item xs={12} md={7} direction="column" alignItems="flex-end">
@@ -241,7 +265,7 @@ export default function TokenOfFriendship() {
 
         </Grid>
         }
-        
+
          {offerSent &&
           <Grid container item xs={12} md={7} direction="column" alignItems="flex-end">
             <NotificationPanel action="send token" />
