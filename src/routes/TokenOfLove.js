@@ -310,10 +310,10 @@ export default function TokenOfLove() {
               <Box variant="h5" component="h3" className={classes.notificationSubHeading}>
                 Ask your partner to visit the accept link and paste the token ID to accept the offer.
                 <div className={classes.instructions} ref={instructions}> Accept my Token of Love when you visit: <a href="#" className={classes.acceptLink}>https://commitmint-dev.surge.sh/love/accept</a>
-                  <br />
+                  {/* <br />
                   and paste the
                   <br />
-                  Token ID: {tokenId}
+                  Token ID: {tokenId} */}
                 </div>
                 <Button onClick={copyToClipboard} variant="text">Copy message</Button>
               </Box>
