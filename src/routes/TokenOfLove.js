@@ -181,7 +181,7 @@ export default function TokenOfLove() {
               color="primary"
               variant="outlined"
               className={`${classes.input} ${classes.inputLast}`}
-              onChange={e => setTokenAmount(ethers.utils.parseEther(e.target.value || 0))}
+              onChange={e => setTokenAmount(ethers.utils.parseEther(String(parseFloat(e.target.value) || 0)))}
               helperText="Amount in ETH must be greater than zero"
             />
           </Grid>
