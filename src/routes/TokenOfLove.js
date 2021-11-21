@@ -112,8 +112,10 @@ const useStyles = makeStyles((theme) => ({
 export default function TokenOfLove() {
   const classes = useStyles();
 
+  const [tokenAmount, setTokenAmount] = useState(ethers.utils.parseEther("1"));
   const [partnerAddress, setPartnerAddress] = useState("");
   const [offerSent, setOfferSent] = useState(false);
+  const [errorMsg, setErrorMsg] = useState(null);
 
   const web3React = useWeb3React();
 
@@ -128,15 +130,28 @@ export default function TokenOfLove() {
     return output;
   }
 
- async function sendOffer() {
-    const signer = web3React.library.getSigner(web3React.account);
-    const tokenContract = new ethers.Contract(LOVE_CONTRACT_ADDRESS, TokenOfLoveContract.abi, signer);
-    let overrides = {
-      value: ethers.utils.parseEther(".001")
-    };
-    const txn = await tokenContract.offer(partnerAddress, overrides);
-    await txn.wait();
-    setOfferSent(true);
+  async function sendOffer() {
+
+    try {
+      const signer = web3React.library.getSigner(web3React.account);
+      const tokenContract = new ethers.Contract(LOVE_CONTRACT_ADDRESS, TokenOfLoveContract.abi, signer);
+      let overrides = {
+        value: tokenAmount
+      };
+      const txn = await tokenContract.offer(partnerAddress, overrides);
+      await txn.wait();
+      setOfferSent(true);
+    } catch (e) {
+      if (!!e.data?.message.match(/InvalidPayment/)) {
+        setErrorMsg("Payment must be greater than 0");
+      }
+      if (!!e.data?.message.match(/PaymentError/)) {
+        setErrorMsg("There was an error with the payment");
+      }
+      if (!!e.message.match(/user denied transaction/i)) {
+        setErrorMsg("Transaction was rejected");
+      }
+    }
   }
 
   return (
@@ -152,6 +167,22 @@ export default function TokenOfLove() {
               variant="outlined"
               className={`${classes.input} ${classes.inputLast}`}
               onChange={e => setPartnerAddress(e.target.value)}
+              error={!!errorMsg}
+              helperText={errorMsg ? errorMsg : null}
+            />
+          </Grid>
+
+          <Grid container item component="form" justifyContent="center" direction="column" className={classes.leftPanel}>
+            <Typography variant="body1" paragraph className={classes.heroBody}>
+              Show how much you care ❤️💎
+            </Typography>
+            <TextField
+              label="Token Amount"
+              color="primary"
+              variant="outlined"
+              className={`${classes.input} ${classes.inputLast}`}
+              onChange={e => setTokenAmount(ethers.utils.parseEther(e.target.value || 0))}
+              helperText="Amount in ETH must be greater than zero"
             />
           </Grid>
 
