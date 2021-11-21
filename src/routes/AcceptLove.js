@@ -17,6 +17,7 @@ import TokenOfLove from "../artifacts/contracts/TokenOfLove.sol/TokenOfLove.json
 import { LOVE_CONTRACT_ADDRESS } from '../constants';
 
 import walletDp1 from "../assets/wallet_dp1.png";
+import NotificationPanel from "../components/NotificationPanel";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -59,7 +60,6 @@ const useStyles = makeStyles((theme) => ({
     lineHeight: "100%",
     letterSpacing: 0,
     marginBottom: theme.spacing(1),
-
   },
   walletAddress: {
     fontSize: "1.25rem",
@@ -150,6 +150,7 @@ export default function AcceptLove() {
     <Container maxWidth="md" className={classes.container}>
       <Grid container item justifyContent="center" spacing={3}>
         {!offerAccepted &&
+        // {!true &&
         <Grid container item xs={12} md={7} direction="column" alignItems="flex-end">
 
           <Grid container item component="form" justifyContent="center" direction="column" className={classes.leftPanel}>
@@ -175,11 +176,13 @@ export default function AcceptLove() {
 
         </Grid>
         }
-        {offerAccepted &&
-        <Typography variant="h5" component="h3">
-          Offer Accepted!!! 🎉🚨
-        </Typography>
+        
+        {offerAccepted && 
+          <Grid container item xs={12} md={7} direction="column" alignItems="flex-end">
+            <NotificationPanel action="receive token" /> 
+          </Grid>
         }
+
         <Grid item xs={12} md={4}>
           <Grid container item direction="row" className={classes.rightPanel}>
             <Avatar className={classes.walletAvatar} alt="wallet address" src={walletDp1} />

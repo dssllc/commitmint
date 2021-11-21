@@ -17,10 +17,12 @@ import TokenOfFriendshipContract from "../artifacts/contracts/TokenOfFriendship.
 import { FRIEND_CONTRACT_ADDRESS } from '../constants';
 
 import walletDp1 from "../assets/wallet_dp1.png";
+import NotificationPanel from "../components/NotificationPanel";
 
 import ConnectWallet from "../components/ConnectWallet";
 import MetadataForm from "../components/MetadataForm";
 import UserAccountPanel from "../components/UserAccountPanel";
+
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -239,16 +241,10 @@ export default function TokenOfFriendship() {
 
         </Grid>
         }
+        
          {offerSent &&
           <Grid container item xs={12} md={7} direction="column" alignItems="flex-end">
-            <Grid container item justifyContent="center" direction="column" className={classes.leftPanel}>
-              <Typography variant="h3" component="h3" className={classes.notificationHeading}>
-                Offer sent!
-              </Typography>
-              <Typography variant="h5" component="h3" className={classes.notificationSubHeading}>
-                Check your wallet for the transaction status and token ID.
-              </Typography>
-            </Grid>
+            <NotificationPanel action="send token" />
 
             <Grid container item justifyContent="center" direction="column" className={`${classes.leftPanel} ${classes.notificationPanel}`}>
 

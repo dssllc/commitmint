@@ -17,6 +17,7 @@ import TokenOfFriendship from "../artifacts/contracts/TokenOfFriendship.sol/Toke
 import { FRIEND_CONTRACT_ADDRESS } from '../constants';
 
 import walletDp1 from "../assets/wallet_dp1.png";
+import NotificationPanel from "../components/NotificationPanel";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -175,11 +176,12 @@ export default function AcceptLove() {
 
         </Grid>
         }
+
         {offerAccepted &&
-        <Typography variant="h5" component="h3">
-          Offer Accepted!!! 🎉🚨
-        </Typography>
-        }
+          <Grid container item xs={12} md={7} direction="column" alignItems="flex-end">
+            <NotificationPanel action="receive token" />
+          </Grid>}
+
         <Grid item xs={12} md={4}>
           <Grid container item direction="row" className={classes.rightPanel}>
             <Avatar className={classes.walletAvatar} alt="wallet address" src={walletDp1} />
