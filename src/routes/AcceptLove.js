@@ -150,6 +150,9 @@ export default function AcceptLove() {
       if (!!e.data?.message.match(/InvalidAcceptance/)) {
         setInvalidAcceptance("This wallet can not accept this token");
       }
+      if (!!e.message.match(/estimate gas/)) {
+        setInvalidAcceptance("Offer not found");
+      }
       if (!!e.message.match(/user denied transaction/i)) {
         setInvalidAcceptance("Transaction was rejected");
       }
@@ -185,7 +188,7 @@ export default function AcceptLove() {
               className={`${classes.input} ${classes.inputLast}`}
               onChange={e => setTokenOfLoveId(e.target.value)}
               error={invalidAcceptance}
-              helperText={!!invalidAcceptance ? invalidAcceptance : null}
+              helperText={!!invalidAcceptance ? invalidAcceptance : "Please use the token ID (e.g. 1, 2, 5)"}
             />
           </Grid>
 

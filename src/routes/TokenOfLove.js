@@ -13,6 +13,7 @@ import {
   Backdrop,
   CircularProgress
 } from "@material-ui/core";
+import { Link } from 'react-router-dom';
 import ConnectWallet from "../components/ConnectWallet";
 import { useWeb3React } from "@web3-react/core";
 import { ethers } from "ethers";
@@ -152,7 +153,16 @@ const useStyles = makeStyles((theme) => ({
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
     color: '#fff',
-  }
+  },
+  ctaButton1: {
+    marginTop: theme.spacing(3),
+    borderRadius: '0',
+    color: '#ffffff',
+    backgroundColor: '#F2994A',
+    '&:hover': {
+      backgroundColor: '#DE802D'
+    }
+  },
 }));
 
 export default function TokenOfLove() {
@@ -299,7 +309,7 @@ export default function TokenOfLove() {
               </Typography>
               <Box variant="h5" component="h3" className={classes.notificationSubHeading}>
                 Ask your partner to visit the accept link and paste the token ID to accept the offer.
-                <div className={classes.instructions} ref={instructions}> Accept my Token of Love when you visit: <a href="#" className={classes.acceptLink}>{`${process.env.PUBLIC_URL}`}https://commintmint.app/love/accept</a>
+                <div className={classes.instructions} ref={instructions}> Accept my Token of Love when you visit: <a href="#" className={classes.acceptLink}>https://commitmint-dev.surge.sh/love/accept</a>
                   <br />
                   and paste the
                   <br />
@@ -323,7 +333,19 @@ export default function TokenOfLove() {
               </Typography>
             </Box>
           </Grid>
+          <Grid container item direction="row">
+            <Button
+              variant="contained"
+              className={classes.ctaButton1}
+              component={Link}
+              to="/love/accept"
+              disableElevation
+            >
+              Accept an offer
+            </Button>
+          </Grid>
         </Grid>
+
       </Grid>
     </Container>
   );
