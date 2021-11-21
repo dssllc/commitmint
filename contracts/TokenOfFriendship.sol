@@ -14,11 +14,11 @@ contract TokenOfFriendship is CommitmintToken {
     constructor() ERC721("TokenOfFriendship", "FRIENDS") {}
 
     /// @notice Public offer.
-    function offer(address to) external {
+    function offer(address to) external nonReentrant {
         _tokens.increment();
         uint256 tokenId = _tokens.current();
-        _safeMint(_msgSender(), tokenId);
         _offers[tokenId] = to;
+        _safeMint(_msgSender(), tokenId);
         emit Offer(_msgSender(), to, tokenId);
     }
 }

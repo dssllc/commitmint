@@ -3,8 +3,9 @@ pragma solidity 0.8.10;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
-abstract contract CommitmintToken is ERC721 {
+abstract contract CommitmintToken is ERC721, ReentrancyGuard {
 
     // Mapping from token ID to request address.
     mapping(uint256 => address) internal _offers;

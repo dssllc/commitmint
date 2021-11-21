@@ -21,7 +21,7 @@ contract TokenOfLove is CommitmintToken {
     constructor() ERC721("TokenOfLove", "LOVE") {}
 
     /// @notice Public offer.
-    function offer(address to) external payable {
+    function offer(address to) external payable nonReentrant {
         if (msg.value <= BURN_MINIMUM)
             revert InvalidPayment();
 
@@ -31,8 +31,8 @@ contract TokenOfLove is CommitmintToken {
 
         _tokens.increment();
         uint256 tokenId = _tokens.current();
-        _safeMint(_msgSender(), tokenId);
         _offers[tokenId] = to;
+        _safeMint(_msgSender(), tokenId);
         emit Offer(_msgSender(), to, tokenId);
     }
 }
