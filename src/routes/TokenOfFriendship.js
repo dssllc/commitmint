@@ -129,7 +129,19 @@ export default function TokenOfFriendship() {
     return output;
   }
 
- async function sendOffer() {
+  function checkAddress(address) {
+    try {
+      ethers.utils.getAddress(address);
+      setFriendAddress(address);
+      setErrorMsg(null);
+    } catch (e) {
+      console.log(e);
+      setErrorMsg("Please enter a valid address");
+      return false;
+    }
+  }
+
+  async function sendOffer() {
     try {
       const signer = web3React.library.getSigner(web3React.account);
       const tokenContract = new ethers.Contract(FRIEND_CONTRACT_ADDRESS, TokenOfFriendshipContract.abi, signer);
@@ -155,7 +167,7 @@ export default function TokenOfFriendship() {
               color="primary"
               variant="outlined"
               className={`${classes.input} ${classes.inputLast}`}
-              onChange={e => setFriendAddress(e.target.value)}
+              onChange={e => checkAddress(e.target.value)}
               error={!!errorMsg}
               helperText={errorMsg ? errorMsg : null}
             />

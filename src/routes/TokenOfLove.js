@@ -130,6 +130,18 @@ export default function TokenOfLove() {
     return output;
   }
 
+  function checkAddress(address) {
+    try {
+      ethers.utils.getAddress(address);
+      setPartnerAddress(address);
+      setErrorMsg(null);
+    } catch (e) {
+      console.log(e);
+      setErrorMsg("Please enter a valid address");
+      return false;
+    }
+  }
+
   async function sendOffer() {
 
     try {
@@ -166,7 +178,7 @@ export default function TokenOfLove() {
               color="primary"
               variant="outlined"
               className={`${classes.input} ${classes.inputLast}`}
-              onChange={e => setPartnerAddress(e.target.value)}
+              onChange={e => checkAddress(e.target.value)}
               error={!!errorMsg}
               helperText={errorMsg ? errorMsg : null}
             />
